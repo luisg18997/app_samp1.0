@@ -86,7 +86,7 @@ class empleado{
     }
 
     public function actualizar(empleado $data){
-        if($_REQUEST['x']==2){
+        if(isset($_REQUEST['x']) && $_REQUEST['x']==2){
             $sql='UPDATE empleado SET id_estado=?, id_municipio=?, id_parroquia=?, direccion=?, ubicacion=?, tipo_viv=?, id_viv=?, apartamento=? , id_ingreso=?, id_tipo_ingreso=? WHERE id=?';
             $query=$this->con->prepare($sql);
             $query->execute(array($data->__get('estado'),
@@ -120,17 +120,46 @@ class empleado{
                 $this->sueldo($data,false);
             }
             unset($data);
-            if($query == true){
+        }elseif(isset($_REQUEST['x']) && $_REQUEST['x']==3){
+            if($_REQUEST['movimiento']==1 || $_REQUEST['movimiento']==18){
+                $sql="UPDATE empleado SET status=? WHERE id=?";
+                 $query=$this->con->prepare($sql);
+                 $query->execute(array($data->__get('status')),
+                    $data->__get('id'));
+            }elseif($_REQUEST['movimiento']<13 && $_REQUEST['movimiento']>=19){
+                $sql="UPDATE empleado SET fecha_act=? WHERE id=?";
+                 $query=$this->con->prepare($sql);
+                 $query->execute(array($data->__get('fecha_act')),
+                    $data->__get('id'));
+            }else{
+                $sql="UPDATE empleado SET fecha_retiro=?, status=? WHERE id=?";
+                 $query=$this->con->prepare($sql);
+                 $query->execute(array($data->__get('fecha_ret'),
+                    $data->__get('status')),
+                    $data->__get('id'));
+            }
+        }else{
+            $sql='UPDATE empleado SET nombre_1=?, nombre_2=?, apellido_1=?, apellido_2=?, id_unidad_ejec=?, id_departamento=?, id_catedra=? WHERE id=?';
+            $query=$this->con->prepare($sql);
+            $query->execute(array($data->__get('nombre_1'),
+                $data->__get('nombre_2'),
+                $data->__get('apellido_1'),
+                $data->__get('apellido_2'),
+                $data->__get('unidad_ejec'),
+                $data->__get('departamento'),
+                $data->__get('catedra'),
+                $data->__get('id')));
+        } 
+        if($query == true){
                 return true;
             }else{
                 return false;
             }
-        } 
     }
 
     public function consultar($x='', $id='', $idac='',$nac='',$ced=''){
         if(isset($x) && $x==1){
-            $sql="SELECT e.*, hs.id as historial, s.id_categoria as categoria, s.id_dedicacion as dedicacion, s.sueldo as sueldo FROM empleado e, sueldo s INNER JOIN historial_sueldo hs ON hs.id_sueldo=s.id WHERE e.id=hs.id_emp AND  ";
+            $sql="SELECT e.*, hs.id as historial, s.id_categoria as categoria, s.id_dedicacion as dedicacion, s.id as sueldo FROM empleado e, sueldo s INNER JOIN historial_sueldo hs ON hs.id_sueldo=s.id WHERE e.id=hs.id_emp AND  ";
             if(isset($id) && !empty($id)){
                 $dato=$id;
                 $sql.=" e.id=? ";

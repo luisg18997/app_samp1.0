@@ -98,7 +98,7 @@ class rrhhcontroller{
     public function confi_mov_per(){
         $data=$this->proceso->consultar_status($_REQUEST['id'],false);
         $data->__set('status',0);
-        $this->proceso->actualizar($data);
+        print_r($this->proceso->actualizar($data));
         if(!isset($_REQUEST['observacion'])){
             $pro=$this->procesocontroller->guardar(3,1);
         }else{

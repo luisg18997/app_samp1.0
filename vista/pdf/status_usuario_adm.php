@@ -2,7 +2,7 @@
 <table  align="center">
     <tr align="center">
         <td><span><img src="img/ucv.png" width="15%" height="35%"></span></td>
-        <td><h2>SISTEMA AUTOMATIZADO DE MOVIMIENTO DE PERSONAL</h2></td>
+        <td><h2>SISTEMA AUTOMATIZADO DEL MOVIMIENTO DE PERSONAL</h2></td>
         <td><img src="img/faculta_humanidades_educacion.png" width="15%" height="35%"></td>
     </tr>
 </table>

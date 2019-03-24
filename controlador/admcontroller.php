@@ -150,7 +150,7 @@ class admcontroller{
         </script> <?php
     }
 
-    public function pdf_listar_usuario(){
+    public function pdf(){
         if (isset($_REQUEST['nombre'])){
             $usuario=array();
             for ($i=0; $i<count($_POST)-1;$i++){
@@ -163,12 +163,7 @@ class admcontroller{
                 $result->__set('status',$_POST['status'][$i]);
                 $usuario[]=$result;
             }
-            if(isset($_SESSION['pdf'])){
-                unset($_SESSION['pdf']);
-            }
-            require_once ("vista/pdf/status_usuario_adm.php");
-            $html=ob_get_clean();
-            $this->pdf->visualizar($html,'status_usuario'); ?> 
+            $this->pdf->status_usuario($usuario);?> 
             <script type="text/javascript"> window.location.href='<?=RUTA_HTTP?>adm';</script> <?php
         }else{ ?>
             <script> window.location.href='<?=RUTA_HTTP?>adm'; </script><?php

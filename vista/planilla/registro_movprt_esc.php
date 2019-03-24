@@ -1,3 +1,4 @@
+
 <div>
 	<h3>Registro de Planilla Movimiento de Personal:  </h3>
     <h4>Personal: <?=$empleado->__get('nombre_1').' '.  $empleado->__get('apellido_1')?> Idac: <?=$_SESSION['idac'][$empleado->__get('idac')-1]['idac']?></h4>
@@ -149,7 +150,7 @@
                         <select name="ingreso" id="ingreso" onblur="formulario(this)">
                             <option value=" ">Seleccione...</option>
                             <?php foreach ($_SESSION['ingreso'] as $r){ ?>
-                            <option value="<?=$r['id']?>"><?=$r['descripcion']?></option>
+                            <option value="<?=$r['id']?>" <?php if($empleado->__get('ingreso')==$r['id']){ ?> selected <?php }?>><?=$r['descripcion']?></option>
                                 <?php }?>
                         </select>
                     </td>
@@ -158,7 +159,7 @@
                         <select name="tipoingreso" id="tipo ingreso" onblur="formulario(this)">
                             <option value=" ">Seleccione...</option>
                             <?php foreach ($_SESSION['tipo_ingreso'] as $r){ ?>
-                            <option value="<?=$r['id']?>"><?=$r['descripcion']?></option>
+                            <option value="<?=$r['id']?>" <?php if($empleado->__get('tipo_ingreso')==$r['id']){?> selected <?php }?>><?=$r['descripcion']?></option>
                                 <?php }?>
                         </select>
                     </td>
@@ -225,7 +226,7 @@
                         <select id="dedicacion actual" onblur="formulario(this)" <?php if($planilla->__get('movimiento')==1){?> disabled <?php } ?>>
                             <option value=" ">Seleccione</option>
                             <?php foreach ($_SESSION['dedicacion'] as $r){?>
-                                <option value="<?=$r['id']?>"><?=$r['descripcion']?></option>
+                                <option value="<?=$r['id']?>" <?php if($empleado->__get('dedicacion')==$r['id']){?> selected<?php } ?>><?=$r['descripcion']?></option>
                             <?php }?>
                         </select>
                     </td>
@@ -278,7 +279,7 @@
                 <tr align="center">
                     <td><label for="anexos">* Anexos:</label></td>
                     <td><textarea name="anexos" id="anexos" disabled ><?php
-                    if(empty($planilla->__get('anexos'))){
+                    if(empty($planilla->__get('anexos')) && !empty($anexo)){
                         echo $anexo;
                     }else{
                         echo $planilla->__get('anexos');

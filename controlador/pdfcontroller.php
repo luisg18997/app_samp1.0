@@ -8,14 +8,21 @@ class pdfcontroller{
     }
 
     public function visualizar($html,$title){
+        $this->pdf->setPaper('A4', 'landscape');
         $this->pdf->loadHtml($html);
         $this->pdf->render();
         $title.=".pdf";
-        //header('Content-type: application/pdf');
-        //echo $this->pdf->output();
-        $this->pdf->stream($title);
-        $salida=$this->pdf->output();
-        file_put_contents($title, $salida);
-        //$this->pdf->stream($title,array("Attachment" => 0)); 
+        header('Content-type: application/pdf');
+        echo $this->pdf->output();
+        //$this->pdf->stream($title); 
+        die();
     }
+
+    public function status_usuario($usuario){
+        require_once ("vista/pdf/status_usuario_adm.php");
+        $html=ob_get_clean();
+        $this->visualizar($html,'status_usuario'); 
+    }
+
+
 }

@@ -106,6 +106,7 @@ class planilla{
         $sql .= " LIMIT 1;";
         $query = $this->con->prepare($sql);
         $query->execute(array($dato));
+
         if ($query->rowCount() == 1) {
             $r = $query->fetch(PDO::FETCH_ASSOC);
             $dato = new planilla();

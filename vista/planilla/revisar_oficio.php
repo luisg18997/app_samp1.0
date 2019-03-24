@@ -1,4 +1,4 @@
-<form id="revisaroficio" action="<?=RUTA_HTTP?>presupuesto/confi_oficio" method="post">
+<form id="revisaroficio" action="<?=RUTA_HTTP?><?=$_REQUEST['c']?>/confi_oficio" method="post">
 	<h3 align="center">Planilla Oficio</h3>
 	<h4>Codigo: <?=$proceso->__get('cod_pla')?></h4>
 	<table class="table table-resonposive">
@@ -27,7 +27,7 @@
 		</tr>
 		<tr>
 			<td><label>Tipo de Movimiento:</label></td>
-			<input type="hidden" name="movimiento" value="<?=$planilla->__get('movimiento')?>">
+			<input type="hidden" name="movimiento" value="<?=$oficio->__get('movimiento')?>">
 			<td><?=$_SESSION['movimiento'][$oficio->__get('movimiento')-1]['descripcion']?></td>
 			<td><label>Idac:</label></td>
 			<input type="hidden" name="idac" value="<?=$empleado->__get('idac')?>">

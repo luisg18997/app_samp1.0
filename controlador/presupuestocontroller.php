@@ -91,9 +91,9 @@ class presupuestocontroller{
       $this->proceso->actualizar($data);
       $data->__set('fecha',trim($_SESSION['fecha']));
       $data->__set('status',1);
-      $data->__set('ubicacion',2);
+      $data->__set('ubicacion',3);
       $data->__set('fase',2);
-      $this->proceso->agg_proceso($data);
+      $re=$this->proceso->agg_proceso($data);
       }
       $this->planillacontroller->$accion(); 
     }
@@ -110,10 +110,7 @@ class presupuestocontroller{
         if($pro!=false){
             if($pro==1){
                 $per=$this->empleadocontroller->guardar();
-                print_r($per);
                 $mov=$this->planillacontroller->mov_guardar();
-                print_r($mov);
-                die();
                 if($per==true && $mov==true){
                    $msj='planilla Aprobada exitosamente'; 
                }else{

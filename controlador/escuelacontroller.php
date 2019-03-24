@@ -6,18 +6,27 @@ require_once('planillacontroller.php');
 require_once 'empleadocontroller.php';
 require_once ("pdfcontroller.php");
 require_once ("datoscontroller.php");
+require_once('modelo/planilla.php');
+require_once('modelo/empleado.php');
+require_once('modelo/proceso.php');
 
 class escuelacontroller{
     private $planilla;
+    private $pla;
     private $dato;
     private $empleado;
+    private $emp;
     private $buscador;
     private $proceso;
+    private $pro;
     private $pdf;
   
     public function __construct(){
       $this->planilla = new planillacontroller();
       $this->dato = new datoscontroller();
+      $this->pro = new proceso();
+      $this->pla = new planilla();
+      $this->emp = new empleado();
       $this->pdf= new pdfcontroller();
       $this->empleado= new empleadocontroller();
       $this->buscador= new busquedacontroller();
@@ -38,8 +47,36 @@ class escuelacontroller{
     }
 
     public function index(){
-        $data = new planilla();
+        $pr=$this->pro->listar_status();
         $planilla= array();
+         if($pr!=false){
+          foreach ($pr as $r) {
+            if($r->__get('ubicacion')==1 && $r->__get('status')==true){
+                    $data = new proceso();
+                    $data->__set('cod_pla',$r->__get('cod_pla'));
+                    $ruta=str_replace('-','_',$r->__get('cod_pla'));
+                    if($r->__get('tipo')==1){
+                      $data->__set('tipo','Planilla Oficio');
+                        $data->__set('ruta',"ver_oficio/{$ruta}");
+                    }else{
+                      $data->__set('tipo','Planilla Movimiento de Personal');
+                        $data->__set('ruta',"ver_mov_personal/{$ruta}");
+                    }
+                    $fecha=date('d-m-Y', strtotime($r->__get('fecha')));
+                    $data->__set('fecha',$fecha);
+                    $pl=$this->pla->consultar($r->__get('id_planilla'));
+                    $data->__set('movimiento',trim($_SESSION['movimiento'][$pl->__get('movimiento')-1]['descripcion']));
+                    $data->__set('escuela',trim($_SESSION['escuela'][$pl->__get('escuela')-1]['nombre']));
+                        $data->__set('fase','Aprobado');
+                    $em=$this->emp->consultar(false,$pl->__get('id_empleado'));
+                    $data->__set('nombre',$em->__get('nombre_1'));
+                    $data->__set('apellido',$em->__get('apellido_1'));
+                    $data->__set('ubicacion',$em->__get('catedra'));
+                    $planilla[]=$data;
+                    unset($data);
+                  }
+                }
+         }
         require_once ("vista/include/header.php");
         require_once ("vista/include/menu.php");
         require_once ("vista/escuela/principal.php");
@@ -74,7 +111,7 @@ class escuelacontroller{
      $emple=$this->empleado->guardar();
      $oficio=$this->planilla->oficio_guardar($emple);
      $proc =$this->proceso->guardar($oficio,1);
-     if(empty($_REQUEST['id_empleado']) && empty($_REQUEST['id_planilla']) && empty($_REQUEST['id_proceso'])){
+     if( empty($_REQUEST['id_planilla']) && empty($_REQUEST['id_proceso'])){
          if($proc!=false) {
              $msj="Registro de planilla exitoso! Codigo de planilla Oficio {$proc}";
              $proc=str_replace('-','_',$proc);?>
@@ -136,7 +173,6 @@ class escuelacontroller{
         ruta('<?=$msj?>','<?=RUTA_HTTP?>escuela');
       </script> <?php
     }else{
-      print_r("esta aqui");
     }
   }
 
@@ -161,22 +197,88 @@ class escuelacontroller{
   public function buscar(){
     switch ($_REQUEST['aux']) {
       case 'oficio_buscar':{
-        print_r('entro en oficio');
         $ac='oficio_buscar';
         break;
       }
         
       case 'mov_per_buscar':{
-        print_r('entro en pla');
         $ac='mov_per_buscar';
         break;
       }
-      default:
-      print_r('no consiguio ninguna llora');
-      break;
-      
+    
     }
       $this->buscador->$ac();
+  }
+
+  public function pdf(){
+    $proceso = new proceso();
+    $empleado = new empleado();
+    $planilla= new planilla();
+    switch ($_REQUEST['aux']) {
+      case 'ver_mov_personal':{
+        $ac='planilla_mov_per';
+        $x=1;
+        break;
+      }
+      case 'ver_oficio':{
+         $ac='planilla_oficio';
+         $x=2;
+        break;
+      }  
+    }
+   if(isset($_REQUEST['id'])){
+      $cod=str_replace('_','-',$_REQUEST['id']);
+      $proceso=$this->pro->consultar_status(false,$cod);
+      $planilla=$this->pla->consultar($proceso->__get('id_planilla'),false);
+      $empleado=$this->emp->consultar(1, $planilla->__get('id_empleado'),false);
+      if($x==1){
+        $i=0;
+        foreach ($_SESSION['anexo'] as $r) {
+          if($planilla->__get('movimiento')==$r['id_movimiento']){
+            if($i==0){
+              $anexo=trim($r['nombre']);
+            }else{
+              $anexo.=", ".trim($r['nombre']);
+            }
+            $i++;
+          }
+        }
+      $ubicacion=explode(',',$empleado->__get('ubicacion'));
+      $direccion=explode(',',$empleado->__get('direccion'));
+      $tipo_viv=explode(',',$empleado->__get('tipo_viv'));
+      $id_viv=explode(',',$empleado->__get('id_viv'));
+      }else{
+        $fecha=$planilla->__get('fecha_fin')-$planilla->__get('fecha_ini');
+        if($fecha>1){
+          $fi=explode('-',$planilla->__get('fecha_ini'));
+          $ff=explode('-',$planilla->__get('fecha_fin'));
+          $fec=date('d-m-Y', strtotime($planilla->__get('fecha_ini'))).' hasta el '.date('d-m-Y',strtotime("31-12-{$fi[0]}"));
+          for ($i=0; $i <=$fecha ; $i++) { 
+            $f=$fi[0]+$i;
+            if($i>0){
+              if($i<($fecha)){
+                $fec.=', ';
+              }else{
+                $fec.=' y ';
+              }
+              $fec.=" del ".date('d-m-Y',strtotime("01-01-{$f}")).' hasta el  ';
+              if($i!=($fecha)){
+                $fec.=date('d-m-Y',strtotime("31-12-{$f}"));
+              }
+            }
+            
+          }
+          $fec.=date('d-m-Y', strtotime($planilla->__get('fecha_fin')));
+        }else{
+          $fec=date('d-m-Y', strtotime($planilla->__get('fecha_ini'))).' hasta el '.date('d-m-Y', strtotime($planilla->__get('fecha_fin')));
+        }
+      }
+    }
+    ob_start();
+    require_once ("vista/pdf/{$ac}.php");
+    $html=ob_get_clean();
+    //echo $html;
+    $this->pdf->visualizar($html,$proceso->__get('cod_pla'));
   }
 
 }

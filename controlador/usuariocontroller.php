@@ -112,8 +112,8 @@ class usuariocontroller{
         </script> <?php
     }
 
-    public function clave($opcion){ //funcion que permite dirigirse y agg pregunta o buscar el correo para cambio de respuesta
-        switch ($opcion){
+    public function clave(){ //funcion que permite dirigirse y agg pregunta o buscar el correo para cambio de respuesta
+        switch ($_REQUEST['aux']){
             case 'pregunta':{
                 if (isset($_SESSION['activa'])){
                     $url="sesion/pregunta_seguridad.php";

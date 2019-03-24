@@ -15,6 +15,11 @@ class empleadocontroller{
         if(empty($_REQUEST['id_empleado'])){
             $registro->__set('fecha_ing',$_SESSION['fecha']);
             $registro->__set('status', 0);
+            $registro->__set('genero', trim($_REQUEST['genero']));
+            $registro->__set('fecha_nac', trim($_REQUEST['fechanac']));
+            $registro->__set('telf_movil', trim($_REQUEST['telf_movil']));
+            $registro->__set('telf_local', trim($_REQUEST['telf_local']));
+            $registro->__set('email', trim($_REQUEST['email']));
         }else{
             $registro->__set('id',$_REQUEST['id_empleado']);
         }
@@ -60,11 +65,6 @@ class empleadocontroller{
             $registro->__set('sueldo',$_REQUEST['sueldo']);
         }else{
             $registro->__set('nacionalidad', trim($_REQUEST['nacionalidad']));
-            $registro->__set('genero', trim($_REQUEST['genero']));
-            $registro->__set('fecha_nac', trim($_REQUEST['fechanac']));
-            $registro->__set('telf_movil', trim($_REQUEST['telf_movil']));
-            $registro->__set('telf_local', trim($_REQUEST['telf_local']));
-            $registro->__set('email', trim($_REQUEST['email']));
         }
         $registro->__set('departamento', trim($_REQUEST['departamento']));
         $registro->__set('catedra', trim($_REQUEST['catedra']));

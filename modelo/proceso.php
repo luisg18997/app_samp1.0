@@ -38,9 +38,12 @@ class proceso {
             foreach ($result as $r){
                 if(strncmp($r->__get('cod_pla'),$code,5)==0){
                     $codeu=explode('-',$r->__get('cod_pla'));
+                    if($i==1){
+                        $code1="01";
+                    }
                     if($codeu[1]==$code1){
                         $i++;  
-                        if($i>=1 && $i<=9){
+                        if($i>1 && $i<=9){
                             $code1="0{$i}";
                         }else{
                             $code1="{$i}";
@@ -53,7 +56,6 @@ class proceso {
             }
             $code.=$code1;
         }else{
-            print_r('nunca te dio codigo');
             $code.='01';
         }
         return $code;
@@ -116,10 +118,10 @@ class proceso {
               ON f.id=id_fase INNER JOIN ubicacion u ON id_ubicacion=u.id ";
         if(isset($id) && !empty($id)){
             $dato=$id;
-            $sql.=" WHERE p.id=? ";
+            $sql.=" WHERE p.id=? AND p.status=true ";
         }else{
             $dato=$fecha;
-            $sql.=" WHERE fecha=? ";
+            $sql.=" WHERE fecha=? AND p.status=true ";
         }
         $sql.=" LIMIT 1;";
         $query=$this->con->prepare($sql);

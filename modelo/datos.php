@@ -8,8 +8,7 @@ class datos{
 	private $departamento;
 	private $rol;
 	private $ingreso;
-    private $cod_ofi;
-    private $cod_mov;
+    private $ced;
 	private $tipo_ingreso;
 	private $movimiento;
 	private $dedicacion;
@@ -191,18 +190,15 @@ class datos{
             $result21[]=$fila21;
         }
         $data->__set('programa',$result21);
-        $sql22="SELECT cod_pla FROM status_planilla ORDER BY id ASC";
+        $sql22="SELECT nacionalidad, cedula FROM empleado ORDER BY id ASC";
         $query22=$this->con->prepare($sql22);
         $query22->execute();
         while ($fila22=$query22->fetch(PDO::FETCH_ASSOC)){
-            if(strncmp($fila22['cod_pla'],'07',2)==0){
-                $mov[]=$fila22;
-            }else{
-                $ofc[]=$fila22;
-            }
+            $ced[]=$fila22;
         }
-        $data->__set('cod_mov',$mov);
-        $data->__set('cod_ofic',$ofc);
+        if(isset($ced)){
+            $data->__set('ced',$ced);
+        }
 
         $this->con=null;
         return $data; //guardar todos los datos extraido de la base de datos

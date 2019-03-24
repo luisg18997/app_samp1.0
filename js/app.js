@@ -103,6 +103,24 @@ function veremil(id, btn) { //  verificar emal
     return true;
 }
 
+function valecedula(id,id2,env){
+    var nc = document.getElementById(id);
+    var ced = document.getElementById(id2);
+    var btn = document.getElementById(env);
+    for(i=0; i < cedula.length; i++){
+        if(nc.value==nac[i] && ced.value== cedula[i]){
+          alert('La cedula esta registrada');  
+          btn.disabled = true;         
+            return false;
+        }
+    }
+    if (btn.disabled == true){
+        btn.disabled=false;
+    }
+    return true;
+
+}
+
 function valemail(id,form) {
     var conemail = document.getElementById(id);
     var recuperar= document.getElementById(form);
@@ -251,11 +269,11 @@ function selectesc(valor,ref,v2){
     }
 }
 
-function deshabilitaRetroceso(){ //retroceso
+/*function deshabilitaRetroceso(){ //retroceso
     window.location.hash="no-back-button";
     window.location.hash="Again-No-back-button" //chrome
     window.onhashchange=function(){};
-}
+}*/
 
 function valida(event){ // validar si es numero
     if((event.charCode >= 48 && event.charCode <= 57) || event.keyCode==9 || event.keuCode==37 || event.keyCode==39 || event.keyCode==8){

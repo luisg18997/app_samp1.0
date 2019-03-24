@@ -1,4 +1,5 @@
 <div>
+    <?php print_r($empleado->__get('idac'))?>
     <hr>
 	<h3 align="center">Registro de Planilla Oficio: </h3>
 	<form method="post" id="oficio" action="<?=RUTA_HTTP?>escuela/guardar_oficio"  accept-charset="UTF-8"
@@ -34,19 +35,18 @@
                 </tr>
                 <tr>
                     <td><label for="cedula">* Cedula:
-                    <select id="nacionalidad" name="nacionalidad" onblur="formulario(this)">
+                        <?php if(!empty($empleado->__get('id'))){ ?> <input type="hidden" name="nacionalidad" value="<?=$empleado->__get('nacionalidad')?>"> <?php }?>
+                    <select id="nacionalidad" name="nacionalidad" onblur="formulario(this)" <?php if(!empty($empleado->__get('id'))){ ?> disabled <?php }?> onchange=" return valecedula('nacionalidad','cedula','enviar')">
                             <option value=" "></option>
                             <option value="V" <?php if($empleado->__get('nacionalidad')=='V'){?> selected <?php }?>>V-</option>
                             <option value="E" <?php if($empleado->__get('nacionalidad')=='E'){?> selected <?php }?>>E-</option>
                         </select></label></td>
                     <td>
-                        <input type="text" name="cedula" id="cedula" maxlength="8" minlength="6" onblur="formulario(this)" value="<?=$empleado->__get('cedula')?>" 
-                               placeholder="Ingrese el numero de cedula" required onkeypress="return valida(event)">
+                        <input type="text" name="cedula" id="cedula" maxlength="8" minlength="6" onblur="formulario(this)" onchange=" return valecedula('nacionalidad','cedula','enviar')" value="<?=$empleado->__get('cedula')?>" placeholder="Ingrese el numero de cedula" required onkeypress="return valida(event)" <?php if(!empty($empleado->__get('id'))){ ?> readonly <?php }?>>
                     </td>
                     <td><label for="email">* Email:</label></td>
                     <td>
-                        <input type="email" id="email" name="email" placeholder="ejemplo.ejemplo@ucv.ve" onblur="formulario(this)" value="<?=$empleado->__get('email')?>"
-                               minlength="10" required maxlength="50">
+                        <input type="email" id="email" name="email" placeholder="ejemplo.ejemplo@ucv.ve" onblur="formulario(this)" value="<?=$empleado->__get('email')?>" minlength="10" required maxlength="50" <?php if(!empty($empleado->__get('id'))){ ?> readonly <?php }?>>
                     </td>
                 </tr>
                 <?php if(empty($empleado->__get('id')) && $empleado->__get('status')==0) {?>
@@ -98,7 +98,7 @@
                         <select id="dedicacion" name="dedicacion" onblur="formulario(this)">
                             <option value=" ">Seleccione..</option>
                             <?php foreach ($_SESSION['dedicacion'] as $r){?>
-                                <option value="<?=$r['id']?>"><?=$r['descripcion']?></option>
+                                <option value="<?=$r['id']?>" <?php if($empleado->__get('dedicacion')==$r['id']){ ?> selected <?php }?>><?=$r['descripcion']?></option>
                             <?php }?>
                         </select>
                     </td>
@@ -116,6 +116,7 @@
                     </td>
                     <td><label for="catedra">* Catedra:</label></td>
                     <td>
+                        <input type="hidden" name="catedra" value="<?=$empleado->__get('catedra')?>">
                         <select name="catedra" id="catedra" disabled onchange=" unid_ejec('catedra',codigocat[value-1] ,'unidad ejecutora')"
                                 onblur="formulario(this)">
                             <option value=" ">Seleccione</option>
@@ -145,8 +146,8 @@
                             <?php if(empty($empleado->__get('idac'))){ foreach ($_SESSION['idac'] as $r){
                                 if($r['status']==true){?>
                                 <option value="<?=$r['id']?>"><?=$r['idac']?></option>
-                            <?php } } }else{ ?>
-                             <option value="<?=$r['id']?>"><?=$r['idac']?></option>
+                            <?php } } }else{  ?>
+                             <option value="<?=$empleado->__get('idac')?>" selected><?=$_SESSION['idac'][$empleado->__get('idac')]['idac']?></option>
                             <?php  }?>
                         </select>
                     </td>
@@ -165,7 +166,7 @@
                 </tr>
                 <tr align="center">
                     <td colspan="4">
-                        <input type="submit" value="Registrar">
+                        <input type="submit" id='enviar' value="Registrar">
                         <input type="reset" value="Restablecer">
                     </td>
                 </tr>

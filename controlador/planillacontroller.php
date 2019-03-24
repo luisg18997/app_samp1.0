@@ -20,7 +20,7 @@ class planillacontroller{
         $empleado = new empleado();
         $proceso = new proceso();
        if(isset($_REQUEST['id'])){
-        $empleado=$this->empleado->consultar(false,$_REQUEST['id'],false);
+        $empleado=$this->empleado->consultar(1,$_REQUEST['id'],false);
             /*if($_REQUEST['id'])){
               $cod=str_replace('_','-',$_REQUEST['id']);
                 $proceso=$this->proceso->consultar_status(true,$cod);
@@ -153,8 +153,7 @@ class planillacontroller{
         }
     }
 
-
-    public function guardar_anexo($id){
+    /*public function guardar_anexo($id){
         print_r($_FILES);
         $nombre=$this->empleado->consultar($id,null);
         foreach ($_SESSION['anexo'] as $r) {
@@ -164,12 +163,10 @@ class planillacontroller{
                     $title=$nombre->__get('nombre_1')."_".$nombre->__get('apellido_1')."_".$r['id'];
                     $muf = move_uploaded_file($_FILES[$r['nombre']]['tmp_name'], "{RUTA_HTTP}uploads/" . $title);
                     $i++;
-                    print_r($r['anexo']);
-                }
             }
         }
         die();
-    }
+    }*/
 
     public function ver_oficio(){
         $ofico = new planilla();
@@ -185,7 +182,7 @@ class planillacontroller{
             if($oficio->__get('movimiento')==1){
                 $dedicacion=$oficio->__get('dedicacion_pro');
             }else{
-                $dedicacion=$oficio->__get('dedicacion');
+                $dedicacion=$empleado->__get('dedicacion');
             }
             require_once ("vista/include/header.php");
             require_once ("vista/include/menu.php");

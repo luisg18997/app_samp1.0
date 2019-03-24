@@ -14,9 +14,12 @@ if(!isset($_REQUEST["c"])){
 }else{
     $controller = $_REQUEST['c'].'controller';
     $accion = isset($_REQUEST['a'])? $_REQUEST['a']:'index';
+    if($accion=='pdf'){
+    	$_SESSION['pdf']=true;
+    }else{
+    	unset($_SESSION['pdf']);
+    }
     $controller = new $controller();
-    $opcion= isset($_REQUEST['aux'])? $_REQUEST['aux']:'null';
-    $id = isset($_REQUEST['i'])? $_REQUEST['i']:'null';
-    call_user_func(array($controller,$accion),$opcion,$id);
+    call_user_func(array($controller,$accion));
 }
 ?>

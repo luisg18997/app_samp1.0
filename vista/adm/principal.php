@@ -6,9 +6,9 @@
 </div>
 <div>
     <?php if($usuario!=false){ ?>
-        <form name="revisarusu" method="post" action="<?=RUTA_HTTP?>adm/pdf_listar_usuario">
+        <form name="revisarusu" method="post" action="<?=RUTA_HTTP?>adm/pdf/listar_usuario" style="margin: 0 auto;">
             <h4 align="center">Status de Usuarios</h4>
-            <table class="table table-striped table-hover table-responsive">
+            <table class="table table-striped table-hover" >
                 <tr align="center">
                     <td>Nombre</td>
                     <td>Apellido</td>

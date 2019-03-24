@@ -28,6 +28,7 @@ class datoscontroller{
             var idejec = new Array(); var ejecutora = new Array(); var codigoejec = new Array();
             var idmovimiento = new Array(); var movimiento = new Array();
             var idanexo = new Array(); var idmovanexo = new Array(); var anexo= new Array();
+            var cedula = new Array(); var nac= new Array();
             <?php 
             foreach ($_SESSION['parroquia'] as $r){ ?>
             parroquias[<?=$i?>]= '<?=trim($r['descripcion'])?>';
@@ -82,7 +83,12 @@ class datoscontroller{
             municipios[<?=$i?>]= '<?=trim($r['descripcion'])?>';
             idmunicipio[<?=$i?>]= '<?=trim($r['id'])?>';
             idestmunicipios[<?=$i?>]= '<?=trim($r['id_estado'])?>';
-            <?php $i++; } $i=0;?>
+            <?php $i++; } $i=0;
+            if(isset($_SESSION['ced'])){
+            foreach ($_SESSION['ced'] as $r){ ?>
+            nac[<?=$i?>]= '<?=trim($r['nacionalidad'])?>';
+            cedula[<?=$i?>]= '<?=trim($r['cedula'])?>';
+            <?php $i++; } $i=0; }?>
         </script> <?php
     }
 
@@ -109,8 +115,9 @@ class datoscontroller{
         $_SESSION['anexo']=$datos->__get('anexo');
         $_SESSION['programa']=$datos->__get('programa');
         $_SESSION['contable']=$datos->__get('contable');
-        $_SESSION['cod_ofc']=$datos->__get('cod_ofic');
-        $_SESSION['cod_mov']=$datos->__get('cod_mov');
+        if(!empty($datos->__get('ced'))){
+        $_SESSION['ced']=$datos->__get('ced');
+        }
     }
 }
 

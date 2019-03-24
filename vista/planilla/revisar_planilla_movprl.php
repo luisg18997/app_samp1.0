@@ -1,4 +1,4 @@
-<form id="revisarplamov" action="<?=RUTA_HTTP?>presupuesto/confi_mov_per" method="post">
+<form id="revisarplamov" action="<?=RUTA_HTTP?><?=$_REQUEST['c']?>/confi_mov_per" method="post">
 	<h3 align="center">Solicitud de Movimiento de Personal</h3>
 	<h4>Codigo: <?=$proceso->__get('cod_pla')?></h4>
 	<!--Datos Personales -->
@@ -6,7 +6,7 @@
 		<tr>
 			<input type="hidden" name="cod_pla" value="<?=$proceso->__get('cod_pla')?>">
 			<input type="hidden" name="id_empleado" value="<?=$empleado->__get('id')?>">
-			<input type="hidden" name="id_planilla_mov" value="<?=$planilla->__get('id')?>">
+			<input type="hidden" name="id_planilla" value="<?=$planilla->__get('id')?>">
 			<input type="hidden" name="id" value="<?=$proceso->__get('id')?>">
 			<input type="hidden" name="x" value="3">
 			<td><label>Escuela o Instituto:</label></td>
@@ -44,11 +44,11 @@
 			<td><label>Unidad Ejecutora:</label></td>
 			<td><?=$_SESSION['unidad_ejecutora'][$empleado->__get('unidad_ejec')-1]['codigo']?>: <?=trim($_SESSION['unidad_ejecutora'][$empleado->__get('unidad_ejec')-1]['descripcion'])?></td>
 			<td><label>Sueldo:</label></td>
-			<td><?=$empleado->__get('sueldo')?></td>
+			<td><?=$_SESSION['sueldo'][$empleado->__get('sueldo')-235]['sueldo']?></td>
 		</tr>
 		<tr>
 			<td><label>Categoria:</label></td>
-			<td><?=$empleado->__get('categoria')?></td>
+			<td><?=$_SESSION['categoria'][$empleado->__get('categoria')-1]['descripcion']?></td>
 			<td><label>Fecha:</label></td>
 			<td><?=date('d-m-Y', strtotime($planilla->__get('fecha_ini')))?> Fin: <?=date('d-m-Y', strtotime($planilla->__get('fecha_fin')))?></td>
 		</tr>
